@@ -20,24 +20,27 @@ import() {
     case "$command" in
 
       list)
+        # TEST ME
+        # [ $# -ne 0 ] && { echo "Too many arguments provided for 'import -- list', expected 0, received $#" >&2; return 1; }
+
         local importPaths
         IFS=: read -ra importPaths <<<"$IMPORT_PATH"
 
-        declare -a cleanImportPaths
+        declare -a standardizedImportPaths
 
         local importPath
         for importPath in "${importPaths[@]}"
         do
           local alreadyImported=""
-          local cleanImportPath="${importPath#./}"
-          cleanImportPath="${cleanImportPath/%\/}"
+          local standardizedImportPath="${importPath#./}"
+          standardizedImportPath="${standardizedImportPath/%\/}"
           
-          [ -z "$cleanImportPath" ] && continue
+          [ -z "$standardizedImportPath" ] && continue
 
           local alreadyImportedPath
-          for alreadyImportedPath in "${cleanImportPaths[@]}"
+          for alreadyImportedPath in "${standardizedImportPaths[@]}"
           do
-            if [ "$alreadyImportedPath" = "$cleanImportPath" ]
+            if [ "$alreadyImportedPath" = "$standardizedImportPath" ]
             then
               alreadyImported=true
               break
@@ -46,10 +49,97 @@ import() {
 
           if [ -z "$alreadyImported" ]
           then
-            cleanImportPaths+=("$cleanImportPath")
+            standardizedImportPaths+=("$standardizedImportPath")
             echo "$importPath"
           fi
         done
+        ;;
+
+      search)
+        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- search': import name" >&2; return 1; }
+        [ $# -gt 1 ] && { echo "Too many arguments provided for 'import -- search', expected 1: import name, received $#" >&2; return 1; }
+
+        local found
+        local importToFind="$1"
+        shift
+
+        if [[ "$importToFind" = *"*"* ]]
+        then
+          if [[ ! "$importToFind" =~ \/\*$ ]] && [[ ! "$importToFind" =~ \/\*\*$ ]]
+          then
+            echo "* and ** operators are only supported at the end of import names, e.g. import lib/* or import lib/**" >&2
+            return 1
+          fi
+        fi
+
+        local importPaths
+        IFS=: read -ra importPaths <<<"$IMPORT_PATH"
+
+        local importPath
+        for importPath in "${importPaths[@]}"
+        do
+          local standardizedImportPath="${importPath#./}"
+          standardizedImportPath="${standardizedImportPath/%\/}"
+
+          if [[ "$standardizedImportPath" = *"**"* ]]
+          then
+            echo "Currently do not support import paths with splats" >&2
+          elif [[ "$standardizedImportPath" = *"*"* ]]
+          then
+            echo "Currently do not support import paths with splats" >&2
+          fi
+
+          if [[ "$importToFind" =~ \/\*$ ]]
+          then
+            local importDirectory="${importToFind/%\/\*}"
+            importDirectory="${standardizedImportPath}/${importDirectory}"
+            if [ -d "$importDirectory" ]
+            then
+              declare -a shFilesInImportDirectory=()
+              local shFile
+              while IFS= read -rd '' shFile; do shFilesInImportDirectory+=("$shFile")
+              done < <(find "$importDirectory" -type f -iname "*.sh" -maxdepth 1 -print0)
+              [ "${#shFilesInImportDirectory[@]}" -gt 0 ] && found=true
+              local shFileFound
+              for shFileFound in "${shFilesInImportDirectory[@]}"
+              do
+                echo "$shFileFound"
+              done
+            fi
+          elif [[ "$importToFind" =~ \/\*\*$ ]]
+          then
+            local importDirectory="${importToFind/%\/\*\*}"
+            importDirectory="${standardizedImportPath}/${importDirectory}"
+            if [ -d "$importDirectory" ]
+            then
+              declare -a shFilesInImportDirectory=()
+              local shFile
+              while IFS= read -rd '' shFile; do shFilesInImportDirectory+=("$shFile")
+              done < <(find "$importDirectory" -type f -iname "*.sh" -print0)
+              [ "${#shFilesInImportDirectory[@]}" -gt 0 ] && found=true
+              local shFileFound
+              for shFileFound in "${shFilesInImportDirectory[@]}"
+              do
+                echo "$shFileFound"
+              done
+            fi
+          fi
+
+          # Import FIRST FOUND and return, don't detect ambiguous imports for the user.
+          # That's kinda the whole point of ordering your IMPORT_PATH in a specific way.
+          local expectedImportPath="${standardizedImportPath}/${importToFind}"
+          if [ -f "$expectedImportPath" ]
+          then
+            echo "$expectedImportPath"
+            found=true
+          elif [ -f "$expectedImportPath.sh" ]
+          then
+            echo "$expectedImportPath.sh"
+            found=true
+          fi
+        done
+
+        [ -n "$found" ]
         ;;
 
       push)

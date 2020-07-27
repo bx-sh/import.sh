@@ -1,5 +1,17 @@
-[ -f ../import.sh ] && source "../import.sh"
-[ -f import.sh ] && source "import.sh"
+if [ -f ../import.sh ]
+then
+  # Local development
+  source ../import.sh
+elif [ -f /import.sh ]
+then
+  # Docker
+  source /import.sh
+else
+  echo "Missing import.sh" >&2
+  exit 1
+fi
+
+IMPORT_PATH=
 
 @spec.import.importPaths.noArgument() {
   expect { import } toFail "Missing required argument for 'import'"
@@ -112,21 +124,69 @@
   expect "$IMPORT_PATH" toEqual "this/too:/and/another:./another:/some/path"
 }
 
-@pending.import.search() {
-  # return 1 unless any found
+@spec.import.search() {
+  expect { import -- search } toFail "Missing"
+  expect { import -- search first second } toFail "Too many"
+
+  refute import -- search dog
+  expect "$( import -- search dog )" toBeEmpty
+
+  import -- push examples/dogs
+
+  assert import -- search dog
+  expect "$( import -- search dog )" toContain "examples/dogs/dog.sh"
+  expect "$( import -- search dog )" not toContain "cat.sh" "duplicate"
+
+  import -- push examples/duplicates
+
+  assert import -- search dog
+  expect "$( import -- search dog )" toContain "examples/dogs/dog.sh"
+  expect "$( import -- search dog )" toContain "duplicate"
+  expect "$( import -- search dog )" not toContain "cat.sh"
+
+  assert import -- search breeds/daschund
+  refute import -- search breeds/golden_retriever
+
+  expect "$DOG" toBeEmpty # doesn't source the file
+}
+
+@spec.import.search.withSplat() {
+  import -- push examples
+
+  expect { import -- search dogs/*/sub-breeds } toFail "* and ** operators are only supported at the end of import names, e.g. import lib/* or import lib/**"
+  expect { import -- search dogs/* } not toFail
+  expect { import -- search dogs/** } not toFail
+
+  refute import -- search dogs/breeds # can't import a directory
+  expect "$( import -- search dogs/breeds )" toBeEmpty
+
+  assert import -- search dogs/breeds/*
+  expect "$( import -- search dogs/breeds/* )" toContain "daschund" "pomeranian"
+  expect "$( import -- search dogs/breeds/* )" not toContain "sub-breeds" "daschund-pomeranian"
+}
+
+@spec.import.search.withDoubleSplat() {
+  import -- push examples
+
+  assert import -- search dogs/breeds/**
+  expect "$( import -- search dogs/breeds/** )" toContain "daschund" "pomeranian"
+  expect "$( import -- search dogs/breeds/** )" toContain "sub-breeds" "daschund-pomeranian"
+}
+
+@pending.import.search.importHasSplat() {
   :
 }
 
-@pending.import.search.withSplat() {
-  :
-}
-
-@pending.import.search.withDoubleSplat() {
+@pending.import.search.importHasDoubleSplat() {
   :
 }
 
 @pending.import.notFound() {
-  :
+  refute import dog
+  
+  import -- push examples/dogs
+
+  assert import dog
 }
 
 @pending.import.notFoundHandlers.list() {
