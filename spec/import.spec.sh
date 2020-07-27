@@ -55,22 +55,60 @@ source "../import.sh"
   :
 }
 
-@pending.import.importPaths.push.pathAlreadyPresent() {
-  :
+@spec.import.importPaths.push() {
+  expect "$( import -- list )" toBeEmpty
+
+  import -- push /some/path
+
+  expect "$( import -- list )" toEqual "/some/path"
+  expect "$IMPORT_PATH" toEqual "/some/path"
+
+  import -- push ./another
+
+  expect "$( import -- list )" toEqual "/some/path\n./another"
+  expect "$IMPORT_PATH" toEqual "/some/path:./another"
 }
 
-@pending.import.importPaths.push() {
-  :
-  import -- push
+@spec.import.importPaths.push.multiplePaths() {
+  expect "$( import -- list )" toBeEmpty
+
+  import -- push /some/path
+
+  expect "$( import -- list )" toEqual "/some/path"
+  expect "$IMPORT_PATH" toEqual "/some/path"
+
+  import -- push ./another /and/another this/too
+
+  expect "$( import -- list )" toEqual "/some/path\n./another\n/and/another\nthis/too"
+  expect "$IMPORT_PATH" toEqual "/some/path:./another:/and/another:this/too"
 }
 
-@pending.import.importPaths.unshift.pathAlreadyPresent() {
-  :
+@spec.import.importPaths.unshift() {
+  expect "$( import -- list )" toBeEmpty
+
+  import -- unshift /some/path
+
+  expect "$( import -- list )" toEqual "/some/path"
+  expect "$IMPORT_PATH" toEqual "/some/path"
+
+  import -- unshift ./another
+
+  expect "$( import -- list )" toEqual "./another\n/some/path"
+  expect "$IMPORT_PATH" toEqual "./another:/some/path"
 }
 
-@pending.import.importPaths.unshift() {
-  :
-  import -- unshift
+@spec.import.importPaths.unshift.multiplePaths() {
+  expect "$( import -- list )" toBeEmpty
+
+  import -- unshift /some/path
+
+  expect "$( import -- list )" toEqual "/some/path"
+  expect "$IMPORT_PATH" toEqual "/some/path"
+
+  import -- unshift ./another /and/another this/too
+
+  expect "$( import -- list )" toEqual "this/too\n/and/another\n./another\n/some/path"
+  expect "$IMPORT_PATH" toEqual "this/too:/and/another:./another:/some/path"
 }
 
 some_function() {

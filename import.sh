@@ -32,6 +32,8 @@ import() {
           local cleanImportPath="${importPath#./}"
           cleanImportPath="${cleanImportPath/%\/}"
           
+          [ -z "$cleanImportPath" ] && continue
+
           local alreadyImportedPath
           for alreadyImportedPath in "${cleanImportPaths[@]}"
           do
@@ -46,6 +48,32 @@ import() {
           then
             cleanImportPaths+=("$cleanImportPath")
             echo "$importPath"
+          fi
+        done
+        ;;
+
+      push)
+        local importPath
+        for importPath in "$@"
+        do
+          if [ -z "$IMPORT_PATH" ]
+          then
+            IMPORT_PATH="$importPath"
+          else
+            IMPORT_PATH="$IMPORT_PATH:$importPath"
+          fi
+        done
+        ;;
+
+      unshift)
+        local importPath
+        for importPath in "$@"
+        do
+          if [ -z "$IMPORT_PATH" ]
+          then
+            IMPORT_PATH="$importPath"
+          else
+            IMPORT_PATH="$importPath:$IMPORT_PATH"
           fi
         done
         ;;
