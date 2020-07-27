@@ -1,4 +1,5 @@
-source "../import.sh"
+[ -f ../import.sh ] && source "../import.sh"
+[ -f import.sh ] && source "import.sh"
 
 @spec.import.importPaths.noArgument() {
   expect { import } toFail "Missing required argument for 'import'"
@@ -111,6 +112,43 @@ source "../import.sh"
   expect "$IMPORT_PATH" toEqual "this/too:/and/another:./another:/some/path"
 }
 
+@pending.import.search() {
+  # return 1 unless any found
+  :
+}
+
+@pending.import.search.withSplat() {
+  :
+}
+
+@pending.import.search.withDoubleSplat() {
+  :
+}
+
+@pending.import.notFound() {
+  :
+}
+
+@pending.import.notFoundHandlers.list() {
+  :
+}
+
+@pending.import.notFoundHandlers.register() {
+  :
+}
+
+@pending.import.notFoundHandlers.deregister() {
+  :
+}
+
+@pending.import.notFound.withCustomHandlerRegistered() {
+  :
+}
+
+@pending.import.alreadyImported() {
+  :
+}
+
 some_function() {
   echo "The path is: $1"
 }
@@ -119,18 +157,6 @@ some_function() {
   :
   # make sure to try paths with spaces
   import -- forEach some_function
-}
-
-@pending.import.importPaths.search() {
-  :
-}
-
-@pending.import.missingFile() {
-  :
-}
-
-@pending.import.alreadyImported() {
-  :
 }
 
 @pending.import.ok() {
