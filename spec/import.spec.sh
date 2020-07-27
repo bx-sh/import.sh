@@ -8,11 +8,11 @@ source "../import.sh"
   expect { import -- } toFail "Missing required command for 'import -- [command]'"
 }
 
-@pending.import.importPaths.unknownCommand() {
-  :
+@spec.import.importPaths.unknownCommand() {
+  expect { import -- foo } toFail "Unknown command for 'import': foo"
 }
 
-@pending.import.importPaths.list() {
+@spec.import.importPaths.list() {
   expect "$( import -- list )" toBeEmpty
 
   local IMPORT_PATH="./lib"
@@ -25,7 +25,33 @@ source "../import.sh"
   expect "$( import -- list )" toEqual "/added/in/front\n./lib\n/some/other/path"
 }
 
-@pending.import.importPaths.list.doesntShowDuplicates() {
+@spec.import.importPaths.list.doesntShowDuplicates() {
+  expect "$( import -- list )" toBeEmpty
+
+  local IMPORT_PATH="./lib"
+  expect "$( import -- list )" toEqual "./lib"
+
+  # Exact same path
+  IMPORT_PATH="$IMPORT_PATH:./lib"
+  expect "$( import -- list )" toEqual "./lib"
+
+  # This is the same but has a / slash at the end
+  IMPORT_PATH="$IMPORT_PATH:./lib/"
+  expect "$( import -- list )" toEqual "./lib"
+
+  # This is the same but doesn't have the ./ at the start
+  IMPORT_PATH="$IMPORT_PATH:lib"
+  expect "$( import -- list )" toEqual "./lib"
+
+  # This is different, it's an absolute path
+  IMPORT_PATH="$IMPORT_PATH:/lib"
+  expect "$( import -- list )" toEqual "./lib\n/lib"
+
+  IMPORT_PATH="$IMPORT_PATH:/some/other/path"
+  expect "$( import -- list )" toEqual "./lib\n/lib\n/some/other/path"
+
+  IMPORT_PATH="/added/in/front:$IMPORT_PATH"
+  expect "$( import -- list )" toEqual "/added/in/front\n./lib\n/lib\n/some/other/path"
   :
 }
 
