@@ -267,8 +267,16 @@ IMPORT_PATH=
   expect "$BREEDS" toEqual ":Pomeranian:Daschund-Pomeranian Mix:Daschund"
 }
 
-@pending.import.withImportsInImport() {
-  :
+@spec.import.withImportsInImport() {
+  import -- push examples
+
+  expect "$DOG" toBeEmpty
+  expect "$CAT" toBeEmpty
+
+  import animals
+  
+  expect "$DOG" toEqual "Rover"
+  expect "$CAT" toEqual "Meow"
 }
 
 @pending.import.reimport() {
