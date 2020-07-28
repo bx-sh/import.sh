@@ -275,15 +275,40 @@ IMPORT_PATH=
   :
 }
 
-@pending.import.lookupHandlers.list() {
-  :
+my_handler() {
+  FOO="You imported $1"
 }
 
-@pending.import.lookupHandlers.register() {
-  :
+@spec.import.lookupHandlers.addHandler.list() {
+  import -- push examples
+
+  expect "$( import -- handlers )" toEqual "import"
+
+  expect { import -- addHandler } toFail "Missing"
+
+  import -- addHandler my_handler
+
+  expect "$( import -- handlers )" toEqual "import\nmy_handler"
+  expect "$IMPORT_HANDLERS" toEqual "import:my_handler"
+
+  expect "$DOG" toBeEmpty
+  expect "$FOO" toBeEmpty
+
+  import dogs/dog
+
+  expect "$DOG" toEqual "Rover"
+  expect "$FOO" toBeEmpty # was handled by import OK
+
+  import i/dont/exist
+
+  expect "$FOO" toEqual "You imported i/dont/exist"
 }
 
-@pending.import.lookupHandlers.deregister() {
+@pending.import.lookupHandlers.prependHandler() {
+  : 
+}
+
+@pending.import.lookupHandlers.removeHandler() {
   :
 }
 
