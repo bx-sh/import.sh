@@ -187,31 +187,103 @@ IMPORT_PATH=
   expect { import -- search dog } toFail "IMPORT_PATH does not support * splat operators in paths"
 }
 
-@pending.import.notFound() {
-  refute import dog
-  
+@spec.import.ok() {
   import -- push examples/dogs
 
+  expect "$DOG" toBeEmpty
+
   assert import dog
+
+  expect "$DOG" toEqual "Rover"
+
+  refute import dog # already imported this
+
+  import -- unshift examples/duplicates
+
+  # So. If you change the paths at runtime, YES, it might re-import a certain path.
+  assert import dog
+  refute import dog # already imported this
+  expect "$DOG" toEqual "Duplicate Dog"
 }
 
-@pending.import.notFoundHandlers.list() {
+@spec.import.ok.second() {
+  import -- push examples/duplicates examples/dogs
+
+  expect "$DOG" toBeEmpty
+
+  assert import dog
+
+  expect "$DOG" toEqual "Duplicate Dog"
+
+  refute import dog # already imported this
+
+  expect "$DOG" toEqual "Duplicate Dog"
+}
+
+@spec.import.multiple() {
+  import -- push examples
+
+  expect "$CAT" toBeEmpty
+  expect "$DOG" toBeEmpty
+
+  assert import cats/cat dogs/dog
+
+  expect "$CAT" toEqual "Meow"
+  expect "$DOG" toEqual "Rover"
+
+  refute import cats/cat
+  refute import dogs/dog
+}
+
+@spec.import.splat() {
+  import -- push examples
+
+  expect "$BREEDS" toBeEmpty
+
+  assert import dogs/breeds/*
+
+  refute import dogs/breeds/daschund
+  refute import dogs/breeds/pomeranian
+
+  expect "$BREEDS" toEqual ":Pomeranian:Daschund"
+
+  assert import dogs/breeds/sub-breeds/daschund-pomeranian
+  refute import dogs/breeds/sub-breeds/daschund-pomeranian
+
+  expect "$BREEDS" toEqual ":Pomeranian:Daschund:Daschund-Pomeranian Mix"
+}
+
+@spec.import.doubleSplat() {
+  import -- push examples
+
+  expect "$BREEDS" toBeEmpty
+
+  assert import dogs/breeds/**
+
+  refute import dogs/breeds/daschund
+  refute import dogs/breeds/pomeranian
+  refute import dogs/breeds/sub-breeds/daschund-pomeranian
+
+  expect "$BREEDS" toEqual ":Pomeranian:Daschund-Pomeranian Mix:Daschund"
+}
+
+@pending.import.withImportsInImport() {
   :
 }
 
-@pending.import.notFoundHandlers.register() {
+@pending.import.reimport() {
   :
 }
 
-@pending.import.notFoundHandlers.deregister() {
+@pending.import.lookupHandlers.list() {
   :
 }
 
-@pending.import.notFound.withCustomHandlerRegistered() {
+@pending.import.lookupHandlers.register() {
   :
 }
 
-@pending.import.alreadyImported() {
+@pending.import.lookupHandlers.deregister() {
   :
 }
 
@@ -223,8 +295,4 @@ some_function() {
   :
   # make sure to try paths with spaces
   import -- forEach some_function
-}
-
-@pending.import.ok() {
-  :
 }

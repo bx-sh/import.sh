@@ -1,1 +1,1 @@
-DUPLICATE_DOG="Spot"
+DOG="Duplicate Dog"
