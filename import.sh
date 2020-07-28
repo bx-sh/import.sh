@@ -383,6 +383,7 @@ import() {
               else
                 # Hey! We're good to go! Let's source this and add it to the list of imported imports!
                 found=true
+                loadedOneOfTheSplatSourceFiles=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$splatSourceFileToImport"
                 source "$splatSourceFileToImport"
               fi
@@ -459,6 +460,7 @@ import() {
               else
                 # Hey! We're good to go! Let's source this and add it to the list of imported imports!
                 found=true
+                loadedOneOfTheSplatSourceFiles=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$splatSourceFileToImport"
                 source "$splatSourceFileToImport"
               fi
@@ -516,6 +518,7 @@ import() {
                 found=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$foundMatchToSource"
                 source "$foundMatchToSource"
+                break
               fi
 
             else
