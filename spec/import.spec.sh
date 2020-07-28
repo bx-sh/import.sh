@@ -386,13 +386,3 @@ my_logging_handler() {
   expect "$( import -- handlers )" toEqual "import"
   expect "$IMPORT_HANDLERS" toBeEmpty
 }
-
-some_function() {
-  echo "The path is: $1"
-}
-
-@pending.import.importPaths.forEach() {
-  :
-  # make sure to try paths with spaces
-  import -- forEach some_function
-}
