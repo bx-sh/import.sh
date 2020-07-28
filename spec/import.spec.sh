@@ -13,8 +13,16 @@ fi
 
 IMPORT_PATH=
 
+@spec.import.version()  {
+  expect "$( import -- version )" toContain "0.0.1"
+}
+
+@spec.import.help()  {
+  expect "$( import -- help )" toContain "search" "push" "unshift" "addHandler" "prependHandler"
+}
+
 @spec.import.importPaths.noArgument() {
-  expect { import } toFail "Missing required argument for 'import'"
+  expect "$( import )" toContain "help" "search" "push" "unshift" "addHandler" "prependHandler"
 }
 
 @spec.import.importPaths.missingCommand() {

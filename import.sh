@@ -1,9 +1,24 @@
 import() {
-  if [ $# -eq 0 ]
-  then
-    echo "Missing required argument for 'import'" >&2
-    return 1
-  fi
+  IMPORT_VERSION="0.0.1"
+  IMPORT_HELP="import $IMPORT_VERSION
+
+import [path][/*[*]]
+
+import -- help
+import -- version
+
+import -- list                # list directories in IMPORT_PATH
+import -- push    [dir] [dir] # push onto back of IMPORT_PATH
+import -- unshift [dir] [dir] # add to front of IMPORT_PATH
+import -- search  [path]      # print all locations path is found
+
+import -- handlers       # list all handler functions in order
+import -- prependHandler # add handler as first handler
+import -- addHandler     # add handler as last handler
+import -- removeHandler  # remove a handler
+"
+
+  [ $# -eq 0 ] && echo "$IMPORT_HELP"
 
   if [ "$1" = "--" ]
   then
@@ -12,12 +27,21 @@ import() {
     if [ $# -eq 0 ]
     then
       echo "Missing required command for 'import -- [command]'" >&2
+      return 1
     fi
 
     local command="$1"
     shift
 
     case "$command" in
+
+      version)
+        echo "import $IMPORT_VERSION"
+        ;;
+
+      help)
+        echo "$IMPORT_HELP"
+        ;;
 
       list)
         # TEST ME
