@@ -88,7 +88,41 @@ import() {
         fi
         ;;
 
-      # prependHandler)
+      prependHandler)
+        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- prependHandler': handler function/command name" >&2; return 1; }
+        local handlerFunctionName="$1"
+        if [ -z "$IMPORT_HANDLERS" ]
+        then
+          IMPORT_HANDLERS="$handlerFunctionName:import"
+        else
+          IMPORT_HANDLERS="$handlerFunctionName:$IMPORT_HANDLERS"
+        fi
+        ;;
+
+      removeHandler)
+        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- removeHandler': handler function/command name" >&2; return 1; }
+        local handlerFunctionName="$1"
+        if [ -n "$IMPORT_HANDLERS" ]
+        then
+          if [ "$IMPORT_HANDLERS" = "$handlerFunctionName" ]
+          then
+            unset IMPORT_HANDLERS
+          elif [[ "$IMPORT_HANDLERS" = *":$handlerFunctionName:"* ]]
+          then
+            IMPORT_HANDLERS="${IMPORT_HANDLERS/:"$handlerFunctionName":}"
+          elif [[ "$IMPORT_HANDLERS" =~ ^$handlerFunctionName: ]]
+          then
+            IMPORT_HANDLERS="${IMPORT_HANDLERS#"$handlerFunctionName":}"
+          elif [[ "$IMPORT_HANDLERS" =~ :$handlerFunctionName$ ]]
+          then
+            IMPORT_HANDLERS="${IMPORT_HANDLERS/%:"$handlerFunctionName"}"
+          else
+            echo "Handler not present: $handlerFunctionName" >&2
+            return 1
+          fi
+        fi
+
+        ;;
 
       search)
         [ $# -lt 1 ] && { echo "Missing required argument for 'import -- search': import name" >&2; return 1; }

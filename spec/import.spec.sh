@@ -277,6 +277,7 @@ IMPORT_PATH=
 
 my_handler() {
   FOO="You imported $1"
+  return 0 # this means it'll stop because we handled it
 }
 
 @spec.import.lookupHandlers.addHandler.list() {
@@ -304,12 +305,78 @@ my_handler() {
   expect "$FOO" toEqual "You imported i/dont/exist"
 }
 
-@pending.import.lookupHandlers.prependHandler() {
-  : 
+@spec.import.lookupHandlers.prependHandler() {
+  import -- push examples
+
+  expect "$( import -- handlers )" toEqual "import"
+
+  expect { import -- prependHandler } toFail "Missing"
+
+  import -- prependHandler my_handler
+
+  expect "$( import -- handlers )" toEqual "my_handler\nimport"
+  expect "$IMPORT_HANDLERS" toEqual "my_handler:import"
+
+  expect "$DOG" toBeEmpty
+  expect "$FOO" toBeEmpty
+
+  import dogs/dog
+
+  expect "$DOG" toBeEmpty # it was handled by my_handler :)
+  expect "$FOO" toEqual "You imported dogs/dog"
 }
 
-@pending.import.lookupHandlers.removeHandler() {
-  :
+my_logging_handler() {
+  FOO="LOG: imported $1"
+  return 1 # this means that we DO NOT handle the import, so hands off to the next handler
+}
+
+@spec.import.lookupHandlers.fallthroughMiddlewareHandler() {
+  import -- push examples
+
+  expect "$( import -- handlers )" toEqual "import"
+
+  expect { import -- prependHandler } toFail "Missing"
+
+  import -- prependHandler my_logging_handler
+
+  expect "$( import -- handlers )" toEqual "my_logging_handler\nimport"
+  expect "$IMPORT_HANDLERS" toEqual "my_logging_handler:import"
+
+  expect "$DOG" toBeEmpty
+  expect "$FOO" toBeEmpty
+
+  import dogs/dog
+
+  expect "$FOO" toEqual "LOG: imported dogs/dog"
+  expect "$DOG" toEqual "Rover" # BOTH handlers saw this one :)
+}
+
+@spec.import.lookupHandlers.removeHandler() {
+  expect { import -- prependHandler } toFail "Missing"
+
+  import -- addHandler my_handler
+  import -- prependHandler my_logging_handler
+
+  expect "$IMPORT_HANDLERS" toEqual "my_logging_handler:import:my_handler"
+  expect "$( import -- handlers )" toEqual "my_logging_handler\nimport\nmy_handler"
+
+  import -- removeHandler my_handler
+
+  expect "$IMPORT_HANDLERS" toEqual "my_logging_handler:import"
+  expect "$( import -- handlers )" toEqual "my_logging_handler\nimport"
+
+  import -- removeHandler import
+
+  expect "$IMPORT_HANDLERS" toEqual "my_logging_handler"
+  expect "$( import -- handlers )" toEqual "my_logging_handler"
+
+  import -- removeHandler my_logging_handler
+
+  # By default, you always get 'import'
+  expect "$IMPORT_HANDLERS" toBeEmpty
+  expect "$( import -- handlers )" toEqual "import"
+  expect "$IMPORT_HANDLERS" toBeEmpty
 }
 
 some_function() {
