@@ -10,15 +10,11 @@ This is the heart of everything.
   🗂️ my-common-scripts
 
     📁 subfolder
-       - script1.sh
-       - script2.sh
+       - hello.sh
+       - world.sh
       
     - foo.sh
     - bar.sh
-    
-  🗂️ other-scripts
-    - hello.sh
-    - world.sh
 ```
 
 ```sh
