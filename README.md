@@ -92,7 +92,7 @@ import_missing() {
   echo "Maybe I should look around for another place to find it..."
 }
 
-import -- addHandler import_missing
+import -- appendHandler import_missing
 ```
 
 ```sh
@@ -114,6 +114,6 @@ import -- search  [path]      # print all locations path is found
 
 import -- handlers       # list all handler functions in order
 import -- prependHandler # add handler as first handler
-import -- addHandler     # add handler as last handler
+import -- appendHandler  # add handler as last handler
 import -- removeHandler  # remove a handler
 ```

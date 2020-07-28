@@ -18,11 +18,11 @@ IMPORT_PATH=
 }
 
 @spec.import.help()  {
-  expect "$( import -- help )" toContain "search" "push" "unshift" "addHandler" "prependHandler"
+  expect "$( import -- help )" toContain "search" "push" "unshift" "appendHandler" "prependHandler"
 }
 
 @spec.import.importPaths.noArgument() {
-  expect "$( import )" toContain "help" "search" "push" "unshift" "addHandler" "prependHandler"
+  expect "$( import )" toContain "help" "search" "push" "unshift" "appendHandler" "prependHandler"
 }
 
 @spec.import.importPaths.missingCommand() {
@@ -296,14 +296,14 @@ my_handler() {
   return 0 # this means it'll stop because we handled it
 }
 
-@spec.import.lookupHandlers.addHandler.list() {
+@spec.import.lookupHandlers.appendHandler.list() {
   import -- push examples
 
   expect "$( import -- handlers )" toEqual "import"
 
-  expect { import -- addHandler } toFail "Missing"
+  expect { import -- appendHandler } toFail "Missing"
 
-  import -- addHandler my_handler
+  import -- appendHandler my_handler
 
   expect "$( import -- handlers )" toEqual "import\nmy_handler"
   expect "$IMPORT_HANDLERS" toEqual "import:my_handler"
@@ -371,7 +371,7 @@ my_logging_handler() {
 @spec.import.lookupHandlers.removeHandler() {
   expect { import -- prependHandler } toFail "Missing"
 
-  import -- addHandler my_handler
+  import -- appendHandler my_handler
   import -- prependHandler my_logging_handler
 
   expect "$IMPORT_HANDLERS" toEqual "my_logging_handler:import:my_handler"

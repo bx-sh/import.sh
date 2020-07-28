@@ -14,7 +14,7 @@ import -- search  [path]      # print all locations path is found
 
 import -- handlers       # list all handler functions in order
 import -- prependHandler # add handler as first handler
-import -- addHandler     # add handler as last handler
+import -- appendHandler  # add handler as last handler
 import -- removeHandler  # remove a handler
 "
 
@@ -101,8 +101,8 @@ import -- removeHandler  # remove a handler
         fi
         ;;
 
-      addHandler)
-        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- addHandler': handler function/command name" >&2; return 1; }
+      appendHandler)
+        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- appendHandler': handler function/command name" >&2; return 1; }
         local handlerFunctionName="$1"
         if [ -z "$IMPORT_HANDLERS" ]
         then
