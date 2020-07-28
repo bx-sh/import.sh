@@ -31,6 +31,12 @@ import() {
         local importPath
         for importPath in "${importPaths[@]}"
         do
+          if [[ "$importPath" =~ \* ]]
+          then
+            echo "IMPORT_PATH does not support * splat operators in paths" >&2
+            return 1
+          fi
+
           local alreadyImported=""
           local standardizedImportPath="${importPath#./}"
           standardizedImportPath="${standardizedImportPath/%\/}"
@@ -63,7 +69,7 @@ import() {
         local importToFind="$1"
         shift
 
-        if [[ "$importToFind" = *"*"* ]]
+        if [[ "$importToFind" =~ \* ]]
         then
           if [[ ! "$importToFind" =~ \/\*$ ]] && [[ ! "$importToFind" =~ \/\*\*$ ]]
           then
@@ -78,16 +84,14 @@ import() {
         local importPath
         for importPath in "${importPaths[@]}"
         do
+          if [[ "$importPath" =~ \* ]]
+          then
+            echo "IMPORT_PATH does not support * splat operators in paths" >&2
+            return 1
+          fi
+
           local standardizedImportPath="${importPath#./}"
           standardizedImportPath="${standardizedImportPath/%\/}"
-
-          if [[ "$standardizedImportPath" = *"**"* ]]
-          then
-            echo "Currently do not support import paths with splats" >&2
-          elif [[ "$standardizedImportPath" = *"*"* ]]
-          then
-            echo "Currently do not support import paths with splats" >&2
-          fi
 
           if [[ "$importToFind" =~ \/\*$ ]]
           then
@@ -146,6 +150,11 @@ import() {
         local importPath
         for importPath in "$@"
         do
+          if [[ "$importPath" =~ \* ]]
+          then
+            echo "IMPORT_PATH does not support * splat operators in paths" >&2
+            return 1
+          fi
           if [ -z "$IMPORT_PATH" ]
           then
             IMPORT_PATH="$importPath"
@@ -159,6 +168,11 @@ import() {
         local importPath
         for importPath in "$@"
         do
+          if [[ "$importPath" =~ \* ]]
+          then
+            echo "IMPORT_PATH does not support * splat operators in paths" >&2
+            return 1
+          fi
           if [ -z "$IMPORT_PATH" ]
           then
             IMPORT_PATH="$importPath"

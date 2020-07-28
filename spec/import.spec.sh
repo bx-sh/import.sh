@@ -173,12 +173,18 @@ IMPORT_PATH=
   expect "$( import -- search dogs/breeds/** )" toContain "sub-breeds" "daschund-pomeranian"
 }
 
-@pending.import.search.importHasSplat() {
-  :
-}
+@spec.import.importHasSplat() {
+  expect { import -- push foo/dogs/* } toFail "IMPORT_PATH does not support * splat operators in paths"
+  expect { import -- push foo/dogs/** } toFail "IMPORT_PATH does not support * splat operators in paths"
+  expect { import -- unshift foo/dogs/* } toFail "IMPORT_PATH does not support * splat operators in paths"
+  expect { import -- unshift foo/dogs/** } toFail "IMPORT_PATH does not support * splat operators in paths"
 
-@pending.import.search.importHasDoubleSplat() {
-  :
+  expect "$( import -- list )" toBeEmpty
+
+  IMPORT_PATH="foo/dogs/**"
+
+  expect { import -- list } toFail "IMPORT_PATH does not support * splat operators in paths"
+  expect { import -- search dog } toFail "IMPORT_PATH does not support * splat operators in paths"
 }
 
 @pending.import.notFound() {
