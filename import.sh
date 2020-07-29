@@ -401,7 +401,7 @@ import -- removeHandler  # remove a handler
             while IFS= read -rd '' shSourceFileFound; do ___import___SplatFilesToImport+=("$shSourceFileFound")
             done < <(find "$___import___ImportToFindAsDirectory" -type f -iname "*.sh" -print0)
 
-            local loadedOneOfTheSplatSourceFiles=""
+            local ___import___LoadedOneSplatFile=""
 
             ##
             # For each of the /** splat found .sh files, source them unless they've been sourced
@@ -435,14 +435,14 @@ import -- removeHandler  # remove a handler
               else
                 # Hey! We're good to go! Let's source this and add it to the list of imported imports!
                 found=true
-                loadedOneOfTheSplatSourceFiles=true
+                ___import___LoadedOneSplatFile=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$___import___SplatFileToImport"
                 # ... Oh dear ... it'll have the 'found' and other variables ... oh shit. FIXME
                 source "$___import___SplatFileToImport"
               fi
             done
 
-            [ -n "$loadedOneOfTheSplatSourceFiles" ] && break # success! this import has been loaded and handled by 'import'
+            [ -n "$___import___LoadedOneSplatFile" ] && break # success! this import has been loaded and handled by 'import'
 
           # /*
           elif [[ "$___import___ImportToFind" =~ \/\*$ ]]
@@ -479,7 +479,7 @@ import -- removeHandler  # remove a handler
             while IFS= read -rd '' shSourceFileFound; do ___import___SplatFilesToImport+=("$shSourceFileFound")
             done < <(find "$___import___ImportToFindAsDirectory" -maxdepth 1 -type f -iname "*.sh" -print0)
 
-            local loadedOneOfTheSplatSourceFiles=""
+            local ___import___LoadedOneSplatFile=""
 
             ##
             # For each of the /** splat found .sh files, source them unless they've been sourced
@@ -513,7 +513,7 @@ import -- removeHandler  # remove a handler
               else
                 # Hey! We're good to go! Let's source this and add it to the list of imported imports!
                 found=true
-                loadedOneOfTheSplatSourceFiles=true
+                ___import___LoadedOneSplatFile=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$___import___SplatFileToImport"
                 # TODO MOVE WHERE THIS SOURCE HAPPENS
                 local IMPORTED_PATH="$___import___FoundMatchToSource"
@@ -521,7 +521,7 @@ import -- removeHandler  # remove a handler
               fi
             done
 
-            [ -n "$loadedOneOfTheSplatSourceFiles" ] && break # success! this import has been loaded and handled by 'import'
+            [ -n "$___import___LoadedOneSplatFile" ] && break # success! this import has been loaded and handled by 'import'
 
           # Regular, non-splat case
           else
