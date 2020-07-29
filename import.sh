@@ -50,7 +50,7 @@ import -- removeHandler  # remove a handler
         local ___import___ImportPaths
         IFS=: read -ra ___import___ImportPaths <<<"$IMPORT_PATH"
 
-        declare -a standardizedImportPaths
+        declare -a ___import___StandardizedImportPaths
 
         local ___import___ImportPath
         for ___import___ImportPath in "${___import___ImportPaths[@]}"
@@ -62,15 +62,15 @@ import -- removeHandler  # remove a handler
           fi
 
           local ___import___AlreadyImported=""
-          local standardizedImportPath="${___import___ImportPath#./}"
-          standardizedImportPath="${standardizedImportPath/%\/}"
+          local ___import___StandardizedImportPath="${___import___ImportPath#./}"
+          ___import___StandardizedImportPath="${___import___StandardizedImportPath/%\/}"
           
-          [ -z "$standardizedImportPath" ] && continue
+          [ -z "$___import___StandardizedImportPath" ] && continue
 
           local ___import___AlreadyImportedPath
-          for ___import___AlreadyImportedPath in "${standardizedImportPaths[@]}"
+          for ___import___AlreadyImportedPath in "${___import___StandardizedImportPaths[@]}"
           do
-            if [ "$___import___AlreadyImportedPath" = "$standardizedImportPath" ]
+            if [ "$___import___AlreadyImportedPath" = "$___import___StandardizedImportPath" ]
             then
               ___import___AlreadyImported=true
               break
@@ -79,7 +79,7 @@ import -- removeHandler  # remove a handler
 
           if [ -z "$___import___AlreadyImported" ]
           then
-            standardizedImportPaths+=("$standardizedImportPath")
+            ___import___StandardizedImportPaths+=("$___import___StandardizedImportPath")
             echo "$___import___ImportPath"
           fi
         done
@@ -177,13 +177,13 @@ import -- removeHandler  # remove a handler
             return 1
           fi
 
-          local standardizedImportPath="${___import___ImportPath#./}"
-          standardizedImportPath="${standardizedImportPath/%\/}"
+          local ___import___StandardizedImportPath="${___import___ImportPath#./}"
+          ___import___StandardizedImportPath="${___import___StandardizedImportPath/%\/}"
 
           if [[ "$___import___ImportToFind" =~ \/\*$ ]]
           then
             local importDirectory="${___import___ImportToFind/%\/\*}"
-            importDirectory="${standardizedImportPath}/${importDirectory}"
+            importDirectory="${___import___StandardizedImportPath}/${importDirectory}"
             if [ -d "$importDirectory" ]
             then
               declare -a shFilesInImportDirectory=()
@@ -200,7 +200,7 @@ import -- removeHandler  # remove a handler
           elif [[ "$___import___ImportToFind" =~ \/\*\*$ ]]
           then
             local importDirectory="${___import___ImportToFind/%\/\*\*}"
-            importDirectory="${standardizedImportPath}/${importDirectory}"
+            importDirectory="${___import___StandardizedImportPath}/${importDirectory}"
             if [ -d "$importDirectory" ]
             then
               declare -a shFilesInImportDirectory=()
@@ -218,7 +218,7 @@ import -- removeHandler  # remove a handler
 
           # Import FIRST FOUND and return, don't detect ambiguous imports for the user.
           # That's kinda the whole point of ordering your IMPORT_PATH in a specific way.
-          local expectedImportPath="${standardizedImportPath}/${___import___ImportToFind}"
+          local expectedImportPath="${___import___StandardizedImportPath}/${___import___ImportToFind}"
           if [ -f "$expectedImportPath" ]
           then
             echo "$expectedImportPath"
@@ -351,9 +351,9 @@ import -- removeHandler  # remove a handler
           local rawImportPath
           for rawImportPath in "${___import___RawImportPaths[@]}"
           do
-            local standardizedImportPath="${rawImportPath#./}"
-            standardizedImportPath="${standardizedImportPath/%\/}"
-            ___import___ImportPaths+=("$standardizedImportPath")
+            local ___import___StandardizedImportPath="${rawImportPath#./}"
+            ___import___StandardizedImportPath="${___import___StandardizedImportPath/%\/}"
+            ___import___ImportPaths+=("$___import___StandardizedImportPath")
           done
 
           ##
