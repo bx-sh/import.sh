@@ -312,8 +312,7 @@ IMPORT_PATH=
   import animals
   
   expect "$DOG" toEqual "Rover"
-  expect "$DOG_AVAILABLE_VARIABLES" toEqual "????"
-  expect "$DOG_AVAILABLE_VARIABLES" not toContain ""
+  expect "$DOG_AVAILABLE_VARIABLES" not toContain "found" "standardized" "shFile"
 }
 
 @pending.import.reimport() {
