@@ -443,6 +443,7 @@ import -- removeHandler  # remove a handler
                 found=true
                 loadedOneOfTheSplatSourceFiles=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$splatSourceFileToImport"
+                # ... Oh dear ... it'll have the 'found' and other variables ... oh shit. FIXME
                 source "$splatSourceFileToImport"
               fi
             done
@@ -520,6 +521,8 @@ import -- removeHandler  # remove a handler
                 found=true
                 loadedOneOfTheSplatSourceFiles=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$splatSourceFileToImport"
+                # TODO MOVE WHERE THIS SOURCE HAPPENS
+                local IMPORTED_PATH="$foundMatchToSource"
                 source "$splatSourceFileToImport"
               fi
             done
@@ -575,6 +578,9 @@ import -- removeHandler  # remove a handler
                 # Good to go! Load it! And mark it as having been loaded.
                 found=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$foundMatchToSource"
+                # TODO - do NOT NOT NOT source here, source later OUTSIDE of the context with all these locals!!!!
+                # but let's at least set this path...
+                local IMPORTED_PATH="$foundMatchToSource"
                 source "$foundMatchToSource"
                 break
               fi

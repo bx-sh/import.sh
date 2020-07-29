@@ -287,6 +287,34 @@ IMPORT_PATH=
   expect "$CAT" toEqual "Meow"
 }
 
+@spec.import.IMPORTED_PATH() {
+  import -- push examples
+
+  expect "$DOG" toBeEmpty
+  expect "$DOG_IMPORTED_PATH" toBeEmpty
+  expect "$CAT" toBeEmpty
+  expect "$CAT_IMPORTED_PATH" toBeEmpty
+
+  import animals
+  
+  expect "$DOG" toEqual "Rover"
+  expect "$DOG_IMPORTED_PATH" toEqual "Dog was given this path: examples/dogs/dog.sh"
+  expect "$CAT" toEqual "Meow"
+  expect "$CAT_IMPORTED_PATH" toEqual "Cat was given this path: examples/cats/cat.sh"
+}
+
+@spec.import.doesntHaveAnyRandomVariables() {
+  import -- push examples
+
+  expect "$DOG" toBeEmpty
+  expect "$DOG_found_var" toBeEmpty
+
+  import animals
+  
+  expect "$DOG" toEqual "Rover"
+  expect "$DOG_found_var" toBeEmpty
+}
+
 @pending.import.reimport() {
   :
 }
