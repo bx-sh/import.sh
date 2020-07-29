@@ -93,10 +93,10 @@ import -- removeHandler  # remove a handler
         else
           local ___import___handlers
           IFS=: read -ra ___import___handlers <<<"$IMPORT_HANDLERS"
-          local importHandler
-          for importHandler in "${___import___handlers[@]}"
+          local IMPORT_HANDLER
+          for IMPORT_HANDLER in "${___import___handlers[@]}"
           do
-            echo "$importHandler"
+            echo "$IMPORT_HANDLER"
           done
         fi
         ;;
@@ -330,13 +330,13 @@ import -- removeHandler  # remove a handler
       #   return 3 - there was an error, stop and return. the function
       #              is responsible for printing its own STDERR/STDOUT.
       ##
-      local importHandler
-      for importHandler in "${___import___handlers[@]}"
+      local IMPORT_HANDLER
+      for IMPORT_HANDLER in "${___import___handlers[@]}"
       do
         ##
         # Detect type of handler (custom function or 'import' main code)
         ##
-        if [ "$importHandler" = "import" ]
+        if [ "$IMPORT_HANDLER" = "import" ]
         then
           ##
           # 'import'
@@ -586,7 +586,7 @@ import -- removeHandler  # remove a handler
           # end 'import'
           ##
         else
-          if "$importHandler" "$___import___ImportToFind"
+          if "$IMPORT_HANDLER" "$___import___ImportToFind"
           then
             local handlerReturnCode=$?
             case $handlerReturnCode in
