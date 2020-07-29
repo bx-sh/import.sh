@@ -55,6 +55,10 @@ hello "There"
 - Supports sourcing all scripts in a subdirectory with `import path/*`
 - Supports sourcing ALL scripts in a subdirectory with `import path/**`
 - Uses `IMPORT_PATH` for searching for `.sh` files to import
+- Imported file can get the path used to source it with `IMPORTED_PATH`
+- Imported file can get the handler used to source it with `IMPORT_HANDLER`
+- List of all sourced files is available in `IMPORTED_PATHS`
+- Custom handlers might not provide `IMPORTED_PATH` (set by default handler)
 
 ---
 
