@@ -345,11 +345,11 @@ import -- removeHandler  # remove a handler
           ##
           # Load IMPORT_PATH
           ##
-          local rawImportPaths
-          IFS=: read -ra rawImportPaths <<<"$IMPORT_PATH"
+          local ___import___RawImportPaths
+          IFS=: read -ra ___import___RawImportPaths <<<"$IMPORT_PATH"
           declare -a ___import___ImportPaths=()
           local rawImportPath
-          for rawImportPath in "${rawImportPaths[@]}"
+          for rawImportPath in "${___import___RawImportPaths[@]}"
           do
             local standardizedImportPath="${rawImportPath#./}"
             standardizedImportPath="${standardizedImportPath/%\/}"
