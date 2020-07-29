@@ -516,7 +516,7 @@ import -- removeHandler  # remove a handler
                 loadedOneOfTheSplatSourceFiles=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$___import___SplatFileToImport"
                 # TODO MOVE WHERE THIS SOURCE HAPPENS
-                local IMPORTED_PATH="$foundMatchToSource"
+                local IMPORTED_PATH="$___import___FoundMatchToSource"
                 source "$___import___SplatFileToImport"
               fi
             done
@@ -526,7 +526,7 @@ import -- removeHandler  # remove a handler
           # Regular, non-splat case
           else
 
-            local foundMatchToSource=""
+            local ___import___FoundMatchToSource=""
 
             ##
             # Regular check against each of the import paths :)
@@ -536,16 +536,16 @@ import -- removeHandler  # remove a handler
             do
               if [ -f "${importPath}/${importToFind}" ]
               then
-                foundMatchToSource="${importPath}/${importToFind}"
+                ___import___FoundMatchToSource="${importPath}/${importToFind}"
                 break
               elif [ -f "${importPath}/${importToFind}.sh" ]
               then
-                foundMatchToSource="${importPath}/${importToFind}.sh"
+                ___import___FoundMatchToSource="${importPath}/${importToFind}.sh"
                 break
               fi
             done
 
-            if [ -n "$foundMatchToSource" ]
+            if [ -n "$___import___FoundMatchToSource" ]
             then
 
               local ___import___ItWasAlreadyImported=""
@@ -556,7 +556,7 @@ import -- removeHandler  # remove a handler
               local alreadyImported
               for alreadyImported in "${___import___ImportedPaths[@]}"
               do
-                if [ "$foundMatchToSource" = "$alreadyImported" ]
+                if [ "$___import___FoundMatchToSource" = "$alreadyImported" ]
                 then
                   ___import___ItWasAlreadyImported=true
                   break
@@ -571,11 +571,11 @@ import -- removeHandler  # remove a handler
               else
                 # Good to go! Load it! And mark it as having been loaded.
                 found=true
-                IMPORTED_PATHS="$IMPORTED_PATHS:$foundMatchToSource"
+                IMPORTED_PATHS="$IMPORTED_PATHS:$___import___FoundMatchToSource"
                 # TODO - do NOT NOT NOT source here, source later OUTSIDE of the context with all these locals!!!!
                 # but let's at least set this path...
-                local IMPORTED_PATH="$foundMatchToSource"
-                source "$foundMatchToSource"
+                local IMPORTED_PATH="$___import___FoundMatchToSource"
+                source "$___import___FoundMatchToSource"
                 break
               fi
 
