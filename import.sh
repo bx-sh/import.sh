@@ -396,9 +396,9 @@ import -- removeHandler  # remove a handler
             ##
             # Find all of the source files in /**
             ##
-            declare -a splatSourceFilesToImport=()
+            declare -a ___import___SplatFilesToImport=()
             local shSourceFileFound
-            while IFS= read -rd '' shSourceFileFound; do splatSourceFilesToImport+=("$shSourceFileFound")
+            while IFS= read -rd '' shSourceFileFound; do ___import___SplatFilesToImport+=("$shSourceFileFound")
             done < <(find "$importToFindAsDirectory" -type f -iname "*.sh" -print0)
 
             local loadedOneOfTheSplatSourceFiles=""
@@ -409,10 +409,10 @@ import -- removeHandler  # remove a handler
             # so you can detect whether or not you've imported a single import before (less useful for N imports).
             # Every sourced file should be added to IMPORTED_PATHS
             ##
-            local splatSourceFileToImport
-            for splatSourceFileToImport in "${splatSourceFilesToImport[@]}"
+            local ___import___SplatFileToImport
+            for ___import___SplatFileToImport in "${___import___SplatFilesToImport[@]}"
             do
-              local itWasAlreadyImported=""
+              local ___import___ItWasAlreadyImported=""
 
               ##
               # Check IMPORTED_PATHS else source this one and 
@@ -420,14 +420,14 @@ import -- removeHandler  # remove a handler
               local alreadyImported
               for alreadyImported in "${___import___ImportedPaths[@]}"
               do
-                if [ "$splatSourceFileToImport" = "$alreadyImported" ]
+                if [ "$___import___SplatFileToImport" = "$alreadyImported" ]
                 then
-                  itWasAlreadyImported=true
+                  ___import___ItWasAlreadyImported=true
                   break
                 fi
               done
 
-              if [ -n "$itWasAlreadyImported" ]
+              if [ -n "$___import___ItWasAlreadyImported" ]
               then
                 # One of the imports was already import, mark everything to fail
                 ___import___AnyImportsFailed=true
@@ -436,9 +436,9 @@ import -- removeHandler  # remove a handler
                 # Hey! We're good to go! Let's source this and add it to the list of imported imports!
                 found=true
                 loadedOneOfTheSplatSourceFiles=true
-                IMPORTED_PATHS="$IMPORTED_PATHS:$splatSourceFileToImport"
+                IMPORTED_PATHS="$IMPORTED_PATHS:$___import___SplatFileToImport"
                 # ... Oh dear ... it'll have the 'found' and other variables ... oh shit. FIXME
-                source "$splatSourceFileToImport"
+                source "$___import___SplatFileToImport"
               fi
             done
 
@@ -474,9 +474,9 @@ import -- removeHandler  # remove a handler
             ##
             # Find all of the source files in /**
             ##
-            declare -a splatSourceFilesToImport=()
+            declare -a ___import___SplatFilesToImport=()
             local shSourceFileFound
-            while IFS= read -rd '' shSourceFileFound; do splatSourceFilesToImport+=("$shSourceFileFound")
+            while IFS= read -rd '' shSourceFileFound; do ___import___SplatFilesToImport+=("$shSourceFileFound")
             done < <(find "$importToFindAsDirectory" -maxdepth 1 -type f -iname "*.sh" -print0)
 
             local loadedOneOfTheSplatSourceFiles=""
@@ -487,10 +487,10 @@ import -- removeHandler  # remove a handler
             # so you can detect whether or not you've imported a single import before (less useful for N imports).
             # Every sourced file should be added to IMPORTED_PATHS
             ##
-            local splatSourceFileToImport
-            for splatSourceFileToImport in "${splatSourceFilesToImport[@]}"
+            local ___import___SplatFileToImport
+            for ___import___SplatFileToImport in "${___import___SplatFilesToImport[@]}"
             do
-              local itWasAlreadyImported=""
+              local ___import___ItWasAlreadyImported=""
 
               ##
               # Check IMPORTED_PATHS else source this one and 
@@ -498,14 +498,14 @@ import -- removeHandler  # remove a handler
               local alreadyImported
               for alreadyImported in "${___import___ImportedPaths[@]}"
               do
-                if [ "$splatSourceFileToImport" = "$alreadyImported" ]
+                if [ "$___import___SplatFileToImport" = "$alreadyImported" ]
                 then
-                  itWasAlreadyImported=true
+                  ___import___ItWasAlreadyImported=true
                   break
                 fi
               done
 
-              if [ -n "$itWasAlreadyImported" ]
+              if [ -n "$___import___ItWasAlreadyImported" ]
               then
                 # One of the imports was already import, mark everything to fail
                 ___import___AnyImportsFailed=true
@@ -514,10 +514,10 @@ import -- removeHandler  # remove a handler
                 # Hey! We're good to go! Let's source this and add it to the list of imported imports!
                 found=true
                 loadedOneOfTheSplatSourceFiles=true
-                IMPORTED_PATHS="$IMPORTED_PATHS:$splatSourceFileToImport"
+                IMPORTED_PATHS="$IMPORTED_PATHS:$___import___SplatFileToImport"
                 # TODO MOVE WHERE THIS SOURCE HAPPENS
                 local IMPORTED_PATH="$foundMatchToSource"
-                source "$splatSourceFileToImport"
+                source "$___import___SplatFileToImport"
               fi
             done
 
@@ -548,7 +548,7 @@ import -- removeHandler  # remove a handler
             if [ -n "$foundMatchToSource" ]
             then
 
-              local itWasAlreadyImported=""
+              local ___import___ItWasAlreadyImported=""
 
               ##
               # Got it! Now, let's just double check that we haven't already sourced this before...
@@ -558,12 +558,12 @@ import -- removeHandler  # remove a handler
               do
                 if [ "$foundMatchToSource" = "$alreadyImported" ]
                 then
-                  itWasAlreadyImported=true
+                  ___import___ItWasAlreadyImported=true
                   break
                 fi
               done
 
-              if [ -n "$itWasAlreadyImported" ]
+              if [ -n "$___import___ItWasAlreadyImported" ]
               then
                 # One of the imports was already import, mark everything to fail
                 ___import___AnyImportsFailed=true
