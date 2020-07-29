@@ -47,22 +47,22 @@ import -- removeHandler  # remove a handler
         # TEST ME
         # [ $# -ne 0 ] && { echo "Too many arguments provided for 'import -- list', expected 0, received $#" >&2; return 1; }
 
-        local importPaths
-        IFS=: read -ra importPaths <<<"$IMPORT_PATH"
+        local ___import___ImportPaths
+        IFS=: read -ra ___import___ImportPaths <<<"$IMPORT_PATH"
 
         declare -a standardizedImportPaths
 
-        local importPath
-        for importPath in "${importPaths[@]}"
+        local ___import___ImportPath
+        for ___import___ImportPath in "${___import___ImportPaths[@]}"
         do
-          if [[ "$importPath" =~ \* ]]
+          if [[ "$___import___ImportPath" =~ \* ]]
           then
             echo "IMPORT_PATH does not support * splat operators in paths" >&2
             return 1
           fi
 
           local alreadyImported=""
-          local standardizedImportPath="${importPath#./}"
+          local standardizedImportPath="${___import___ImportPath#./}"
           standardizedImportPath="${standardizedImportPath/%\/}"
           
           [ -z "$standardizedImportPath" ] && continue
@@ -80,7 +80,7 @@ import -- removeHandler  # remove a handler
           if [ -z "$alreadyImported" ]
           then
             standardizedImportPaths+=("$standardizedImportPath")
-            echo "$importPath"
+            echo "$___import___ImportPath"
           fi
         done
         ;;
@@ -153,36 +153,36 @@ import -- removeHandler  # remove a handler
         [ $# -gt 1 ] && { echo "Too many arguments provided for 'import -- search', expected 1: import name, received $#" >&2; return 1; }
 
         local found
-        local importToFind="$1"
+        local ___import___ImportToFind="$1"
         shift
 
-        if [[ "$importToFind" =~ \* ]]
+        if [[ "$___import___ImportToFind" =~ \* ]]
         then
-          if [[ ! "$importToFind" =~ \/\*$ ]] && [[ ! "$importToFind" =~ \/\*\*$ ]]
+          if [[ ! "$___import___ImportToFind" =~ \/\*$ ]] && [[ ! "$___import___ImportToFind" =~ \/\*\*$ ]]
           then
             echo "* and ** operators are only supported at the end of import names, e.g. import lib/* or import lib/**" >&2
             return 1
           fi
         fi
 
-        local importPaths
-        IFS=: read -ra importPaths <<<"$IMPORT_PATH"
+        local ___import___ImportPaths
+        IFS=: read -ra ___import___ImportPaths <<<"$IMPORT_PATH"
 
-        local importPath
-        for importPath in "${importPaths[@]}"
+        local ___import___ImportPath
+        for ___import___ImportPath in "${___import___ImportPaths[@]}"
         do
-          if [[ "$importPath" =~ \* ]]
+          if [[ "$___import___ImportPath" =~ \* ]]
           then
             echo "IMPORT_PATH does not support * splat operators in paths" >&2
             return 1
           fi
 
-          local standardizedImportPath="${importPath#./}"
+          local standardizedImportPath="${___import___ImportPath#./}"
           standardizedImportPath="${standardizedImportPath/%\/}"
 
-          if [[ "$importToFind" =~ \/\*$ ]]
+          if [[ "$___import___ImportToFind" =~ \/\*$ ]]
           then
-            local importDirectory="${importToFind/%\/\*}"
+            local importDirectory="${___import___ImportToFind/%\/\*}"
             importDirectory="${standardizedImportPath}/${importDirectory}"
             if [ -d "$importDirectory" ]
             then
@@ -197,9 +197,9 @@ import -- removeHandler  # remove a handler
                 echo "$shFileFound"
               done
             fi
-          elif [[ "$importToFind" =~ \/\*\*$ ]]
+          elif [[ "$___import___ImportToFind" =~ \/\*\*$ ]]
           then
-            local importDirectory="${importToFind/%\/\*\*}"
+            local importDirectory="${___import___ImportToFind/%\/\*\*}"
             importDirectory="${standardizedImportPath}/${importDirectory}"
             if [ -d "$importDirectory" ]
             then
@@ -218,7 +218,7 @@ import -- removeHandler  # remove a handler
 
           # Import FIRST FOUND and return, don't detect ambiguous imports for the user.
           # That's kinda the whole point of ordering your IMPORT_PATH in a specific way.
-          local expectedImportPath="${standardizedImportPath}/${importToFind}"
+          local expectedImportPath="${standardizedImportPath}/${___import___ImportToFind}"
           if [ -f "$expectedImportPath" ]
           then
             echo "$expectedImportPath"
@@ -234,37 +234,37 @@ import -- removeHandler  # remove a handler
         ;;
 
       push)
-        local importPath
-        for importPath in "$@"
+        local ___import___ImportPath
+        for ___import___ImportPath in "$@"
         do
-          if [[ "$importPath" =~ \* ]]
+          if [[ "$___import___ImportPath" =~ \* ]]
           then
             echo "IMPORT_PATH does not support * splat operators in paths" >&2
             return 1
           fi
           if [ -z "$IMPORT_PATH" ]
           then
-            IMPORT_PATH="$importPath"
+            IMPORT_PATH="$___import___ImportPath"
           else
-            IMPORT_PATH="$IMPORT_PATH:$importPath"
+            IMPORT_PATH="$IMPORT_PATH:$___import___ImportPath"
           fi
         done
         ;;
 
       unshift)
-        local importPath
-        for importPath in "$@"
+        local ___import___ImportPath
+        for ___import___ImportPath in "$@"
         do
-          if [[ "$importPath" =~ \* ]]
+          if [[ "$___import___ImportPath" =~ \* ]]
           then
             echo "IMPORT_PATH does not support * splat operators in paths" >&2
             return 1
           fi
           if [ -z "$IMPORT_PATH" ]
           then
-            IMPORT_PATH="$importPath"
+            IMPORT_PATH="$___import___ImportPath"
           else
-            IMPORT_PATH="$importPath:$IMPORT_PATH"
+            IMPORT_PATH="$___import___ImportPath:$IMPORT_PATH"
           fi
         done
         ;;
@@ -297,8 +297,8 @@ import -- removeHandler  # remove a handler
     ##
     # For each path to import, e.g. import foo bar
     ##
-    local importToFind
-    for importToFind in "$@"
+    local ___import___ImportToFind
+    for ___import___ImportToFind in "$@"
     do
       local found=""
 
@@ -347,13 +347,13 @@ import -- removeHandler  # remove a handler
           ##
           local rawImportPaths
           IFS=: read -ra rawImportPaths <<<"$IMPORT_PATH"
-          declare -a importPaths=()
+          declare -a ___import___ImportPaths=()
           local rawImportPath
           for rawImportPath in "${rawImportPaths[@]}"
           do
             local standardizedImportPath="${rawImportPath#./}"
             standardizedImportPath="${standardizedImportPath/%\/}"
-            importPaths+=("$standardizedImportPath")
+            ___import___ImportPaths+=("$standardizedImportPath")
           done
 
           ##
@@ -367,27 +367,27 @@ import -- removeHandler  # remove a handler
           ##
 
           # /**
-          if [[ "$importToFind" =~ \/\*\*$ ]]
+          if [[ "$___import___ImportToFind" =~ \/\*\*$ ]]
           then
 
             # strip /**
-            importToFind="${importToFind/%\/\*\*}"
+            ___import___ImportToFind="${___import___ImportToFind/%\/\*\*}"
 
             ##
             # Find the first directory that matched from IMPORT_PATHS
             ##
-            local importToFindAsDirectory=""
-            local importPath
-            for importPath in "${importPaths[@]}"
+            local ___import___ImportToFindAsDirectory=""
+            local ___import___ImportPath
+            for ___import___ImportPath in "${___import___ImportPaths[@]}"
             do
-              if [ -d "${importPath}/${importToFind}" ]
+              if [ -d "${___import___ImportPath}/${___import___ImportToFind}" ]
               then
-                importToFindAsDirectory="${importPath}/${importToFind}"
+                ___import___ImportToFindAsDirectory="${___import___ImportPath}/${___import___ImportToFind}"
                 break
               fi
             done
 
-            if [ -z "$importToFindAsDirectory" ]
+            if [ -z "$___import___ImportToFindAsDirectory" ]
             then
               # Hmm. No matching directly. Let's let another import handler deal with this!
               continue # Go to the next handler!
@@ -399,7 +399,7 @@ import -- removeHandler  # remove a handler
             declare -a ___import___SplatFilesToImport=()
             local shSourceFileFound
             while IFS= read -rd '' shSourceFileFound; do ___import___SplatFilesToImport+=("$shSourceFileFound")
-            done < <(find "$importToFindAsDirectory" -type f -iname "*.sh" -print0)
+            done < <(find "$___import___ImportToFindAsDirectory" -type f -iname "*.sh" -print0)
 
             local loadedOneOfTheSplatSourceFiles=""
 
@@ -445,27 +445,27 @@ import -- removeHandler  # remove a handler
             [ -n "$loadedOneOfTheSplatSourceFiles" ] && break # success! this import has been loaded and handled by 'import'
 
           # /*
-          elif [[ "$importToFind" =~ \/\*$ ]]
+          elif [[ "$___import___ImportToFind" =~ \/\*$ ]]
           then
 
             # strip /*
-            importToFind="${importToFind/%\/\*}"
+            ___import___ImportToFind="${___import___ImportToFind/%\/\*}"
 
             ##
             # Find the first directory that matched from IMPORT_PATHS
             ##
-            local importToFindAsDirectory=""
-            local importPath
-            for importPath in "${importPaths[@]}"
+            local ___import___ImportToFindAsDirectory=""
+            local ___import___ImportPath
+            for ___import___ImportPath in "${___import___ImportPaths[@]}"
             do
-              if [ -d "${importPath}/${importToFind}" ]
+              if [ -d "${___import___ImportPath}/${___import___ImportToFind}" ]
               then
-                importToFindAsDirectory="${importPath}/${importToFind}"
+                ___import___ImportToFindAsDirectory="${___import___ImportPath}/${___import___ImportToFind}"
                 break
               fi
             done
 
-            if [ -z "$importToFindAsDirectory" ]
+            if [ -z "$___import___ImportToFindAsDirectory" ]
             then
               # Hmm. No matching directly. Let's let another import handler deal with this!
               continue # Go to the next handler!
@@ -477,7 +477,7 @@ import -- removeHandler  # remove a handler
             declare -a ___import___SplatFilesToImport=()
             local shSourceFileFound
             while IFS= read -rd '' shSourceFileFound; do ___import___SplatFilesToImport+=("$shSourceFileFound")
-            done < <(find "$importToFindAsDirectory" -maxdepth 1 -type f -iname "*.sh" -print0)
+            done < <(find "$___import___ImportToFindAsDirectory" -maxdepth 1 -type f -iname "*.sh" -print0)
 
             local loadedOneOfTheSplatSourceFiles=""
 
@@ -531,16 +531,16 @@ import -- removeHandler  # remove a handler
             ##
             # Regular check against each of the import paths :)
             ##
-            local importPath
-            for importPath in "${importPaths[@]}"
+            local ___import___ImportPath
+            for ___import___ImportPath in "${___import___ImportPaths[@]}"
             do
-              if [ -f "${importPath}/${importToFind}" ]
+              if [ -f "${___import___ImportPath}/${___import___ImportToFind}" ]
               then
-                ___import___FoundMatchToSource="${importPath}/${importToFind}"
+                ___import___FoundMatchToSource="${___import___ImportPath}/${___import___ImportToFind}"
                 break
-              elif [ -f "${importPath}/${importToFind}.sh" ]
+              elif [ -f "${___import___ImportPath}/${___import___ImportToFind}.sh" ]
               then
-                ___import___FoundMatchToSource="${importPath}/${importToFind}.sh"
+                ___import___FoundMatchToSource="${___import___ImportPath}/${___import___ImportToFind}.sh"
                 break
               fi
             done
@@ -590,7 +590,7 @@ import -- removeHandler  # remove a handler
           # end 'import'
           ##
         else
-          if "$importHandler" "$importToFind"
+          if "$importHandler" "$___import___ImportToFind"
           then
             local handlerReturnCode=$?
             case $handlerReturnCode in
@@ -620,7 +620,7 @@ import -- removeHandler  # remove a handler
       # At the end of everything, 
       if [ -z "$found" ]
       then
-        echo "import not found: $importToFind"
+        echo "import not found: $___import___ImportToFind"
         return 1
       fi
     done
