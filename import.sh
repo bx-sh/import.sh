@@ -1,6 +1,6 @@
 import() {
   IMPORT_VERSION="0.0.1"
-  IMPORT_HELP="import $IMPORT_VERSION
+  ___IMPORT_HELP="import $IMPORT_VERSION
 
 import [path][/*[*]]
 
@@ -18,7 +18,7 @@ import -- appendHandler  # add handler as last handler
 import -- removeHandler  # remove a handler
 "
 
-  [ $# -eq 0 ] && echo "$IMPORT_HELP"
+  [ $# -eq 0 ] && echo "$___IMPORT_HELP"
 
   if [ "$1" = "--" ]
   then
@@ -30,17 +30,17 @@ import -- removeHandler  # remove a handler
       return 1
     fi
 
-    local command="$1"
+    local ___import___command="$1"
     shift
 
-    case "$command" in
+    case "$___import___command" in
 
       version)
         echo "import $IMPORT_VERSION"
         ;;
 
       help)
-        echo "$IMPORT_HELP"
+        echo "$___IMPORT_HELP"
         ;;
 
       list)
@@ -91,10 +91,10 @@ import -- removeHandler  # remove a handler
         then
           echo "import"
         else
-          local importHandlers
-          IFS=: read -ra importHandlers <<<"$IMPORT_HANDLERS"
+          local ___import___handlers
+          IFS=: read -ra ___import___handlers <<<"$IMPORT_HANDLERS"
           local importHandler
-          for importHandler in "${importHandlers[@]}"
+          for importHandler in "${___import___handlers[@]}"
           do
             echo "$importHandler"
           done
@@ -102,7 +102,7 @@ import -- removeHandler  # remove a handler
         ;;
 
       appendHandler)
-        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- appendHandler': handler function/command name" >&2; return 1; }
+        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- appendHandler': handler function/___import___command name" >&2; return 1; }
         local handlerFunctionName="$1"
         if [ -z "$IMPORT_HANDLERS" ]
         then
@@ -113,7 +113,7 @@ import -- removeHandler  # remove a handler
         ;;
 
       prependHandler)
-        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- prependHandler': handler function/command name" >&2; return 1; }
+        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- prependHandler': handler function/___import___command name" >&2; return 1; }
         local handlerFunctionName="$1"
         if [ -z "$IMPORT_HANDLERS" ]
         then
@@ -124,7 +124,7 @@ import -- removeHandler  # remove a handler
         ;;
 
       removeHandler)
-        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- removeHandler': handler function/command name" >&2; return 1; }
+        [ $# -lt 1 ] && { echo "Missing required argument for 'import -- removeHandler': handler function/___import___command name" >&2; return 1; }
         local handlerFunctionName="$1"
         if [ -n "$IMPORT_HANDLERS" ]
         then
@@ -270,7 +270,7 @@ import -- removeHandler  # remove a handler
         ;;
 
       *)
-        echo "Unknown command for 'import': $command" >&2
+        echo "Unknown command for 'import': $___import___command" >&2
         return 1
         ;;
     esac
@@ -285,20 +285,14 @@ import -- removeHandler  # remove a handler
     # Load IMPORT_HANDLERS
     ##
     [ -z "$IMPORT_HANDLERS" ] && local IMPORT_HANDLERS="import"
-    local importHandlers
-    IFS=: read -ra importHandlers <<<"$IMPORT_HANDLERS"
+    local ___import___handlers
+    IFS=: read -ra ___import___handlers <<<"$IMPORT_HANDLERS"
 
     ##
     # If this flag is ever flipped to true, this 'import' will return 1.
-    # Otherwise it will return 0 unless importError has a value.
+    # Otherwise it will return 0.
     ##
-    local anyImportsFailed=""
-
-    ##
-    # Import error to show before returning.
-    # If a handler returns 3 then we stop and show this immediately.
-    ##
-    local importError=""
+    local ___import___AnyImportsFailed=""
 
     ##
     # For each path to import, e.g. import foo bar
@@ -328,16 +322,16 @@ import -- removeHandler  # remove a handler
       #
       #   return 2 - the handler handled this import FAIL, break
       #              the imports will continue running, but the outer
-      #              import command will return a 1 instead of a 0
+      #              import ___import___command will return a 1 instead of a 0
       #              if there are any instances of this
       #
-      #              ^---- this flags anyImportsFailed=true
+      #              ^---- this flags ___import___AnyImportsFailed=true
       #
       #   return 3 - there was an error, stop and return. the function
       #              is responsible for printing its own STDERR/STDOUT.
       ##
       local importHandler
-      for importHandler in "${importHandlers[@]}"
+      for importHandler in "${___import___handlers[@]}"
       do
         ##
         # Detect type of handler (custom function or 'import' main code)
@@ -365,8 +359,8 @@ import -- removeHandler  # remove a handler
           ##
           # Load IMPORTED_PATHS
           ##
-          local importedPaths
-          IFS=: read -ra importedPaths <<<"$IMPORTED_PATHS"
+          local ___import___ImportedPaths
+          IFS=: read -ra ___import___ImportedPaths <<<"$IMPORTED_PATHS"
 
           ##
           # Either the import ends with /** or /* or doesn't (3 main cases to handle)
@@ -411,7 +405,7 @@ import -- removeHandler  # remove a handler
 
             ##
             # For each of the /** splat found .sh files, source them unless they've been sourced
-            # in which case mark anyImportsFailed=true because re-sourcing the same import counts as a 'fail'
+            # in which case mark ___import___AnyImportsFailed=true because re-sourcing the same import counts as a 'fail'
             # so you can detect whether or not you've imported a single import before (less useful for N imports).
             # Every sourced file should be added to IMPORTED_PATHS
             ##
@@ -424,7 +418,7 @@ import -- removeHandler  # remove a handler
               # Check IMPORTED_PATHS else source this one and 
               ##
               local alreadyImported
-              for alreadyImported in "${importedPaths[@]}"
+              for alreadyImported in "${___import___ImportedPaths[@]}"
               do
                 if [ "$splatSourceFileToImport" = "$alreadyImported" ]
                 then
@@ -436,7 +430,7 @@ import -- removeHandler  # remove a handler
               if [ -n "$itWasAlreadyImported" ]
               then
                 # One of the imports was already import, mark everything to fail
-                anyImportsFailed=true
+                ___import___AnyImportsFailed=true
                 # And do nothing :)
               else
                 # Hey! We're good to go! Let's source this and add it to the list of imported imports!
@@ -489,7 +483,7 @@ import -- removeHandler  # remove a handler
 
             ##
             # For each of the /** splat found .sh files, source them unless they've been sourced
-            # in which case mark anyImportsFailed=true because re-sourcing the same import counts as a 'fail'
+            # in which case mark ___import___AnyImportsFailed=true because re-sourcing the same import counts as a 'fail'
             # so you can detect whether or not you've imported a single import before (less useful for N imports).
             # Every sourced file should be added to IMPORTED_PATHS
             ##
@@ -502,7 +496,7 @@ import -- removeHandler  # remove a handler
               # Check IMPORTED_PATHS else source this one and 
               ##
               local alreadyImported
-              for alreadyImported in "${importedPaths[@]}"
+              for alreadyImported in "${___import___ImportedPaths[@]}"
               do
                 if [ "$splatSourceFileToImport" = "$alreadyImported" ]
                 then
@@ -514,7 +508,7 @@ import -- removeHandler  # remove a handler
               if [ -n "$itWasAlreadyImported" ]
               then
                 # One of the imports was already import, mark everything to fail
-                anyImportsFailed=true
+                ___import___AnyImportsFailed=true
                 # And do nothing :)
               else
                 # Hey! We're good to go! Let's source this and add it to the list of imported imports!
@@ -560,7 +554,7 @@ import -- removeHandler  # remove a handler
               # Got it! Now, let's just double check that we haven't already sourced this before...
               ##
               local alreadyImported
-              for alreadyImported in "${importedPaths[@]}"
+              for alreadyImported in "${___import___ImportedPaths[@]}"
               do
                 if [ "$foundMatchToSource" = "$alreadyImported" ]
                 then
@@ -572,7 +566,7 @@ import -- removeHandler  # remove a handler
               if [ -n "$itWasAlreadyImported" ]
               then
                 # One of the imports was already import, mark everything to fail
-                anyImportsFailed=true
+                ___import___AnyImportsFailed=true
                 # And do nothing :)
               else
                 # Good to go! Load it! And mark it as having been loaded.
@@ -610,7 +604,7 @@ import -- removeHandler  # remove a handler
               2)
                 found=true
                 break # handled but silent fail!
-                anyImportsFailed=true
+                ___import___AnyImportsFailed=true
                 ;;
               3)
                 return 3 # oh noes, they want us to stop right away!
@@ -631,7 +625,7 @@ import -- removeHandler  # remove a handler
       fi
     done
 
-    if [ -n "$anyImportsFailed" ]
+    if [ -n "$___import___AnyImportsFailed" ]
     then    
       return 1
     fi
