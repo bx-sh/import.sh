@@ -61,8 +61,9 @@ hello "There"
 - Imported file can get the path used to source it with `IMPORTED_PATH`
 - Imported file can get the handler used to source it with `IMPORT_HANDLER`
 - List of all sourced files is available in `IMPORTED_PATHS`
-- Custom handlers might not provide `IMPORTED_PATH` (set by default handler)
 - Version of `import.sh` used is available at `IMPORT_VERSION`
+
+> Custom handlers might not provide `IMPORTED_PATH` or `IMPORTED_PATHS`
 
 ---
 
