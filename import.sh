@@ -10,7 +10,7 @@ import -- version
 import -- list                # list directories in IMPORT_PATH
 import -- push    [dir] [dir] # push onto back of IMPORT_PATH
 import -- unshift [dir] [dir] # add to front of IMPORT_PATH
-import -- search  [path]      # print all locations path is found
+import -- search  [path]      # print all locations path is ___import___Found
 
 import -- handlers       # list all handler functions in order
 import -- prependHandler # add handler as first handler
@@ -152,7 +152,7 @@ import -- removeHandler  # remove a handler
         [ $# -lt 1 ] && { echo "Missing required argument for 'import -- search': import name" >&2; return 1; }
         [ $# -gt 1 ] && { echo "Too many arguments provided for 'import -- search', expected 1: import name, received $#" >&2; return 1; }
 
-        local found
+        local ___import___Found
         local ___import___ImportToFind="$1"
         shift
 
@@ -190,7 +190,7 @@ import -- removeHandler  # remove a handler
               local shFile
               while IFS= read -rd '' shFile; do shFilesInImportDirectory+=("$shFile")
               done < <(find "$importDirectory" -maxdepth 1 -type f -iname "*.sh" -print0)
-              [ "${#shFilesInImportDirectory[@]}" -gt 0 ] && found=true
+              [ "${#shFilesInImportDirectory[@]}" -gt 0 ] && ___import___Found=true
               local shFileFound
               for shFileFound in "${shFilesInImportDirectory[@]}"
               do
@@ -207,7 +207,7 @@ import -- removeHandler  # remove a handler
               local shFile
               while IFS= read -rd '' shFile; do shFilesInImportDirectory+=("$shFile")
               done < <(find "$importDirectory" -type f -iname "*.sh" -print0)
-              [ "${#shFilesInImportDirectory[@]}" -gt 0 ] && found=true
+              [ "${#shFilesInImportDirectory[@]}" -gt 0 ] && ___import___Found=true
               local shFileFound
               for shFileFound in "${shFilesInImportDirectory[@]}"
               do
@@ -222,15 +222,15 @@ import -- removeHandler  # remove a handler
           if [ -f "$expectedImportPath" ]
           then
             echo "$expectedImportPath"
-            found=true
+            ___import___Found=true
           elif [ -f "$expectedImportPath.sh" ]
           then
             echo "$expectedImportPath.sh"
-            found=true
+            ___import___Found=true
           fi
         done
 
-        [ -n "$found" ]
+        [ -n "$___import___Found" ]
         ;;
 
       push)
@@ -300,7 +300,7 @@ import -- removeHandler  # remove a handler
     local ___import___ImportToFind
     for ___import___ImportToFind in "$@"
     do
-      local found=""
+      local ___import___Found=""
 
       ##
       # For each import handler, e.g. 'import' or custom
@@ -404,7 +404,7 @@ import -- removeHandler  # remove a handler
             local ___import___LoadedOneSplatFile=""
 
             ##
-            # For each of the /** splat found .sh files, source them unless they've been sourced
+            # For each of the /** splat ___import___Found .sh files, source them unless they've been sourced
             # in which case mark ___import___AnyImportsFailed=true because re-sourcing the same import counts as a 'fail'
             # so you can detect whether or not you've imported a single import before (less useful for N imports).
             # Every sourced file should be added to IMPORTED_PATHS
@@ -434,7 +434,7 @@ import -- removeHandler  # remove a handler
                 # And do nothing :)
               else
                 # Hey! We're good to go! Let's source this and add it to the list of imported imports!
-                found=true
+                ___import___Found=true
                 ___import___LoadedOneSplatFile=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$___import___SplatFileToImport"
                 source "$___import___SplatFileToImport"
@@ -481,7 +481,7 @@ import -- removeHandler  # remove a handler
             local ___import___LoadedOneSplatFile=""
 
             ##
-            # For each of the /** splat found .sh files, source them unless they've been sourced
+            # For each of the /** splat ___import___Found .sh files, source them unless they've been sourced
             # in which case mark ___import___AnyImportsFailed=true because re-sourcing the same import counts as a 'fail'
             # so you can detect whether or not you've imported a single import before (less useful for N imports).
             # Every sourced file should be added to IMPORTED_PATHS
@@ -511,7 +511,7 @@ import -- removeHandler  # remove a handler
                 # And do nothing :)
               else
                 # Hey! We're good to go! Let's source this and add it to the list of imported imports!
-                found=true
+                ___import___Found=true
                 ___import___LoadedOneSplatFile=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$___import___SplatFileToImport"
                 local IMPORTED_PATH="$___import___FoundMatchToSource"
@@ -568,7 +568,7 @@ import -- removeHandler  # remove a handler
                 # And do nothing :)
               else
                 # Good to go! Load it! And mark it as having been loaded.
-                found=true
+                ___import___Found=true
                 IMPORTED_PATHS="$IMPORTED_PATHS:$___import___FoundMatchToSource"
                 local IMPORTED_PATH="$___import___FoundMatchToSource"
                 source "$___import___FoundMatchToSource"
@@ -591,14 +591,14 @@ import -- removeHandler  # remove a handler
             local handlerReturnCode=$?
             case $handlerReturnCode in
               0)
-                found=true
+                ___import___Found=true
                 break # handled ok!
                 ;;
               1)
                 : # keep trying, didn't handle / don't want to stop!
                 ;;
               2)
-                found=true
+                ___import___Found=true
                 break # handled but silent fail!
                 ___import___AnyImportsFailed=true
                 ;;
@@ -614,7 +614,7 @@ import -- removeHandler  # remove a handler
       done
 
       # At the end of everything, 
-      if [ -z "$found" ]
+      if [ -z "$___import___Found" ]
       then
         echo "import not found: $___import___ImportToFind"
         return 1
