@@ -397,8 +397,8 @@ import -- removeHandler  # remove a handler
             # Find all of the source files in /**
             ##
             declare -a ___import___SplatFilesToImport=()
-            local shSourceFileFound
-            while IFS= read -rd '' shSourceFileFound; do ___import___SplatFilesToImport+=("$shSourceFileFound")
+            local ___import___ShFileFound
+            while IFS= read -rd '' ___import___ShFileFound; do ___import___SplatFilesToImport+=("$___import___ShFileFound")
             done < <(find "$___import___ImportToFindAsDirectory" -type f -iname "*.sh" -print0)
 
             local ___import___LoadedOneSplatFile=""
@@ -475,8 +475,8 @@ import -- removeHandler  # remove a handler
             # Find all of the source files in /**
             ##
             declare -a ___import___SplatFilesToImport=()
-            local shSourceFileFound
-            while IFS= read -rd '' shSourceFileFound; do ___import___SplatFilesToImport+=("$shSourceFileFound")
+            local ___import___ShFileFound
+            while IFS= read -rd '' ___import___ShFileFound; do ___import___SplatFilesToImport+=("$___import___ShFileFound")
             done < <(find "$___import___ImportToFindAsDirectory" -maxdepth 1 -type f -iname "*.sh" -print0)
 
             local ___import___LoadedOneSplatFile=""
