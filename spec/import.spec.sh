@@ -307,12 +307,13 @@ IMPORT_PATH=
   import -- push examples
 
   expect "$DOG" toBeEmpty
-  expect "$DOG_found_var" toBeEmpty
+  expect "$DOG_AVAILABLE_VARIABLES" toBeEmpty
 
   import animals
   
   expect "$DOG" toEqual "Rover"
-  expect "$DOG_found_var" toBeEmpty
+  expect "$DOG_AVAILABLE_VARIABLES" toEqual "????"
+  expect "$DOG_AVAILABLE_VARIABLES" not toContain ""
 }
 
 @pending.import.reimport() {
