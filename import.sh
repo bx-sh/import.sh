@@ -61,23 +61,23 @@ import -- removeHandler  # remove a handler
             return 1
           fi
 
-          local alreadyImported=""
+          local ___import___AlreadyImported=""
           local standardizedImportPath="${___import___ImportPath#./}"
           standardizedImportPath="${standardizedImportPath/%\/}"
           
           [ -z "$standardizedImportPath" ] && continue
 
-          local alreadyImportedPath
-          for alreadyImportedPath in "${standardizedImportPaths[@]}"
+          local ___import___AlreadyImportedPath
+          for ___import___AlreadyImportedPath in "${standardizedImportPaths[@]}"
           do
-            if [ "$alreadyImportedPath" = "$standardizedImportPath" ]
+            if [ "$___import___AlreadyImportedPath" = "$standardizedImportPath" ]
             then
-              alreadyImported=true
+              ___import___AlreadyImported=true
               break
             fi
           done
 
-          if [ -z "$alreadyImported" ]
+          if [ -z "$___import___AlreadyImported" ]
           then
             standardizedImportPaths+=("$standardizedImportPath")
             echo "$___import___ImportPath"
@@ -417,10 +417,10 @@ import -- removeHandler  # remove a handler
               ##
               # Check IMPORTED_PATHS else source this one and 
               ##
-              local alreadyImported
-              for alreadyImported in "${___import___ImportedPaths[@]}"
+              local ___import___AlreadyImported
+              for ___import___AlreadyImported in "${___import___ImportedPaths[@]}"
               do
-                if [ "$___import___SplatFileToImport" = "$alreadyImported" ]
+                if [ "$___import___SplatFileToImport" = "$___import___AlreadyImported" ]
                 then
                   ___import___ItWasAlreadyImported=true
                   break
@@ -495,10 +495,10 @@ import -- removeHandler  # remove a handler
               ##
               # Check IMPORTED_PATHS else source this one and 
               ##
-              local alreadyImported
-              for alreadyImported in "${___import___ImportedPaths[@]}"
+              local ___import___AlreadyImported
+              for ___import___AlreadyImported in "${___import___ImportedPaths[@]}"
               do
-                if [ "$___import___SplatFileToImport" = "$alreadyImported" ]
+                if [ "$___import___SplatFileToImport" = "$___import___AlreadyImported" ]
                 then
                   ___import___ItWasAlreadyImported=true
                   break
@@ -553,10 +553,10 @@ import -- removeHandler  # remove a handler
               ##
               # Got it! Now, let's just double check that we haven't already sourced this before...
               ##
-              local alreadyImported
-              for alreadyImported in "${___import___ImportedPaths[@]}"
+              local ___import___AlreadyImported
+              for ___import___AlreadyImported in "${___import___ImportedPaths[@]}"
               do
-                if [ "$___import___FoundMatchToSource" = "$alreadyImported" ]
+                if [ "$___import___FoundMatchToSource" = "$___import___AlreadyImported" ]
                 then
                   ___import___ItWasAlreadyImported=true
                   break
