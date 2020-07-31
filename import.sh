@@ -1,5 +1,7 @@
 import() {
-  IMPORT_VERSION="0.0.1"
+
+  IMPORT_VERSION="1.0.0"
+
   ___IMPORT_HELP="import $IMPORT_VERSION
 
 import [path][/*[*]]
