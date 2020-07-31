@@ -1,4 +1,4 @@
-name import
+name @import
 
 description "This is the heart of everything."
 
