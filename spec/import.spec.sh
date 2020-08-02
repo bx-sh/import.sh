@@ -14,7 +14,7 @@ fi
 IMPORT_PATH=
 
 @spec.import.version()  {
-  expect "$( import -- version )" toContain "0.0.1"
+  expect "$( import -- version )" toContain "1.0.0"
 }
 
 @spec.import.help()  {
@@ -301,18 +301,6 @@ IMPORT_PATH=
   expect "$DOG_IMPORTED_PATH" toEqual "Dog was given this path: examples/dogs/dog.sh"
   expect "$CAT" toEqual "Meow"
   expect "$CAT_IMPORTED_PATH" toEqual "Cat was given this path: examples/cats/cat.sh"
-}
-
-@spec.import.doesntHaveAnyRandomVariables() {
-  import -- push examples
-
-  expect "$DOG" toBeEmpty
-  expect "$DOG_AVAILABLE_VARIABLES" toBeEmpty
-
-  import animals
-  
-  expect "$DOG" toEqual "Rover"
-  expect "$DOG_AVAILABLE_VARIABLES" not toContain "found" "standardized" "shFile"
 }
 
 @pending.import.reimport() {
