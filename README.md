@@ -33,7 +33,7 @@ bar "World"
 ```sh
 import subfolder/*
 
-hello "$( world )"
+hello "$(world)"
 ```
 
 ---
