@@ -38,6 +38,10 @@ hello "There"
 
 ---
 
+> Think of this as the `$PATH` for `functions`
+
+---
+
 ## Features
 
 - Imports things.
